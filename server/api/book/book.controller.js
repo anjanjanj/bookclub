@@ -22,7 +22,8 @@ exports.show = function(req, res) {
 
 // Creates a new book in the DB.
 exports.create = function(req, res) {
-  Book.create(req.body, function(err, book) {
+  var userId = req.user._id;
+  Book.create({name: req.body.name, owner: userId}, function(err, book) {
     if(err) { return handleError(res, err); }
     return res.status(201).json(book);
   });

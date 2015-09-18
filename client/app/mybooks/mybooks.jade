@@ -1,0 +1,12 @@
+div(ng-include='"components/navbar/navbar.html"')
+
+.col-md-12
+    | This is the mybooks view.
+
+form.form-inline(ng-submit="addBook()")
+  .form-group
+    input.form-control(type="text", placeholder="Enter book name here..." ng-model="bookName")
+    button.btn.btn-primary(type="submit") Add!
+    
+ul
+  li(ng-repeat="book in books") {{ book.name }}
