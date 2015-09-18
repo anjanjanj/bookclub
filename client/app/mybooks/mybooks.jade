@@ -8,5 +8,7 @@ form.form-inline(ng-submit="addBook()")
     input.form-control(type="text", placeholder="Enter book name here..." ng-model="bookName")
     button.btn.btn-primary(type="submit") Add!
     
+//-ul
+  //-li(ng-repeat="book in books") {{ book.name }}
 ul
-  li(ng-repeat="book in books") {{ book.name }}
+  book-display(ng-repeat="book in books")
