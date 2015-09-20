@@ -14,6 +14,7 @@ angular.module('bookclubApp')
             var thisUsersBooks = _.filter(response.data, function(book) {
               return book.owner === userId;
             });
+
             resolve(thisUsersBooks);
           } else {
             resolve(response.data);
@@ -35,11 +36,24 @@ angular.module('bookclubApp')
           reject(response);
         });
       });
-    }
+    };
+
+    var getBookCover = function(bookName) {
+      return $q(function (resolve, reject) {
+        var encodedBookName = encodeURIComponent(bookName);
+        $http.get('https://www.googleapis.com/books/v1/volumes?q='+encodedBookName+'&maxResults=1&orderBy=relevance&key=AIzaSyCmFa9yTif-u0rBC2v52-U7LXPV1izGPuk').then(function success(response) {
+          console.log(response.body.items[0].volumeInfo.imageLinks.thumbnail);
+          resolve(response);
+        }, function failure(response) {
+          reject(response);
+        });
+      });
+    };
 
     // Public API here
     return {
       getBooksList: getBooksList,
-      addBook: addBook
+      addBook: addBook,
+      getBookCover: getBookCover
     };
   });
