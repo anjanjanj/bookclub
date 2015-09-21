@@ -31,7 +31,6 @@ exports.show = function(req, res) {
 // Creates a new book in the DB.
 
 exports.create = function(req, res) {
-  console.log(process.cwd());
   var userId = req.user._id;
   Book.create({
     name: req.body.name,
@@ -41,7 +40,6 @@ exports.create = function(req, res) {
       return handleError(res, err);
     }
     /*
-    // find and download the image! - oops, turns out Heroku can't be uploaded to
     var encodedBookName = encodeURIComponent(req.body.name);
     var options = {
       url: 'https://www.googleapis.com/books/v1/volumes?q='+encodedBookName+'&maxResults=1&orderBy=relevance&key=AIzaSyCmFa9yTif-u0rBC2v52-U7LXPV1izGPuk',
@@ -53,11 +51,11 @@ exports.create = function(req, res) {
     function callback(error, response, body) {
       if (!error && response.statusCode == 200) {
         var info = JSON.parse(body);
-        //console.log(JSON.stringify(info));
         if (info.items[0].volumeInfo.imageLinks.thumbnail) {
-          var thumbnail = info.items[0].volumeInfo.imageLinks.thumbnail;
-          // *** add path!
-          request(thumbnail).pipe(fs.createWriteStream('uploads/'+book._id+'.jpg'));
+          thumbnail = info.items[0].volumeInfo.imageLinks.thumbnail;
+        }
+        else {
+          thumbnail = '';
         }
       }
       else {

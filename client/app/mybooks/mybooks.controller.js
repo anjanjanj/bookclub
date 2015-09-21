@@ -5,6 +5,8 @@ angular.module('bookclubApp')
     //$scope.message = 'Hello';
     //console.log(Auth.getCurrentUser()._id);
 
+    $scope.books = [];
+
     booksFactory.getBooksList(Auth.getCurrentUser()._id).then(function success(response) {
       //console.log(response);
       $scope.books = response;
@@ -13,9 +15,11 @@ angular.module('bookclubApp')
     });
 
     $scope.addBook = function() {
-      booksFactory.addBook($scope.bookName).then(function success() {
-        $scope.books.push({name: $scope.bookName, owner: Auth.getCurrentUser()._id});
+      booksFactory.addBook($scope.bookName).then(function success(book) {
+        //$scope.books.push({name: $scope.bookName, owner: Auth.getCurrentUser()._id});
         $scope.bookName = '';
+        $scope.books.push(book);
+        console.log(book);
       });
     };
 

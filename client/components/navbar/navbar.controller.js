@@ -1,16 +1,22 @@
 'use strict';
 
 angular.module('bookclubApp')
-  .controller('NavbarCtrl', function ($scope, $location, Auth) {
+  .controller('NavbarCtrl', function($scope, $location, Auth) {
     $scope.menu = [{
       'title': 'Home',
       'link': '/'
+    }];
+
+    $scope.usersMenu = [{
+      'title': 'My Books',
+      'link': '/mybooks'
     }];
 
     $scope.isCollapsed = true;
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.isAdmin = Auth.isAdmin;
     $scope.getCurrentUser = Auth.getCurrentUser;
+
 
     $scope.logout = function() {
       Auth.logout();
