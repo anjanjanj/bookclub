@@ -8,8 +8,11 @@ angular.module('bookclubApp')
     }];
 
     $scope.usersMenu = [{
+      'title': 'All Books',
+      'link': '/all'
+    },{
       'title': 'My Books',
-      'link': '/mybooks'
+      'link': '/my'
     }];
 
     $scope.isCollapsed = true;
