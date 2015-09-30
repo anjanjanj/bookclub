@@ -2,8 +2,6 @@
 
 angular.module('bookclubApp')
   .factory('booksFactory', function($http, $q) {
-    // Service logic
-    // ...
 
     var getBooksList = function(userId) {
       return $q(function(resolve, reject) {
