@@ -6,6 +6,7 @@ angular.module('bookclubApp')
       .state('allBooks', {
         url: '/all',
         templateUrl: 'app/allBooks/allBooks.html',
-        controller: 'AllBooksCtrl'
+        controller: 'AllBooksCtrl',
+        authenticate: true
       });
   });

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bookclubApp')
-  .factory('booksFactory', function($http, $q) {
+  .factory('booksFactory', function($http, $q, Auth, Modal) {
 
     var getBooksList = function(userId) {
       return $q(function(resolve, reject) {
@@ -63,9 +63,25 @@ angular.module('bookclubApp')
       });
     };
 
+    var proposeTrade = function(book) {
+      if (book.owner === Auth.getCurrentUser()._id) {
+        return Modal.confirm.delete(function (book) {
+          // @TODO: post request if user confirms
+          console.log('modal confirmed');
+        });
+            //pollFactory.deletePoll(poll._id).then(function (res) {
+            //  $location.path('/my');
+            //}, function(res) {
+            //  console.log(JSON.stringify(res));
+            //});
+          //});
+      }
+    };
+
     // Public API here
     return {
       getBooksList: getBooksList,
-      addBook: addBook
+      addBook: addBook,
+      proposeTrade: proposeTrade
     };
   });
