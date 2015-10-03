@@ -13,9 +13,9 @@ angular.module('bookclubApp')
               return book.owner === userId;
             });
             //getBookCovers(thisUsersBooks).then(function(results) {
-              // something like _.combine getBookCovers(thisUsersBooks)
-              //console.log(results);
-              resolve(thisUsersBooks);
+            // something like _.combine getBookCovers(thisUsersBooks)
+            //console.log(results);
+            resolve(thisUsersBooks);
             //});
           } else {
             resolve(response.data);
@@ -64,18 +64,18 @@ angular.module('bookclubApp')
     };
 
     var proposeTrade = function(book) {
-      if (book.owner === Auth.getCurrentUser()._id) {
-        return Modal.confirm.delete(function (book) {
-          // @TODO: post request if user confirms
-          console.log('modal confirmed');
-        });
-            //pollFactory.deletePoll(poll._id).then(function (res) {
-            //  $location.path('/my');
-            //}, function(res) {
-            //  console.log(JSON.stringify(res));
-            //});
-          //});
+      if (book.owner !== Auth.getCurrentUser()._id) {
+        //return Modal.confirm.trade(function(book) {
+        if (window.confirm('Propose trade?')) {
+          console.log('trade proposed');
+        }
       }
+      //pollFactory.deletePoll(poll._id).then(function (res) {
+      //  $location.path('/my');
+      //}, function(res) {
+      //  console.log(JSON.stringify(res));
+      //});
+      //});
     };
 
     // Public API here
