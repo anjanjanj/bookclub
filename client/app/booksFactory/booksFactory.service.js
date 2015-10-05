@@ -48,6 +48,7 @@ angular.module('bookclubApp')
         bookNamesArray.forEach(function(book) {
           var encodedBookName = encodeURIComponent(book);
 
+          // @FIXME: try using Firefox to examine the request
           $http.get('https://www.googleapis.com/books/v1/volumes?q=' + encodedBookName + '&maxResults=1&orderBy=relevance&key=AIzaSyA5AP_X7PO5fL-K7bIdF35zEUfOQdU7yJ8').then(function success(response) {
             //results.push(----);
             //console.log(response.body.items[0].volumeInfo.imageLinks.thumbnail);
@@ -66,9 +67,17 @@ angular.module('bookclubApp')
     var proposeTrade = function(book) {
       if (book.owner !== Auth.getCurrentUser()._id) {
         //return Modal.confirm.trade(function(book) {
-        if (window.confirm('Propose trade?')) {
-          console.log('trade proposed');
-        }
+
+        // @TODO: + if the user hasn't already proposed a trade for the book
+          if (window.confirm('Propose trade?')) {
+            console.log('trade proposed');
+            // POST /api/books/trade/:bookId (option 'propose')
+            // later, POST /api/books/trade/:bookId (option 'accept')
+            // ,,,,,, POST /api/books/trade/:bookId (option 'reject')
+          }
+      }
+      else {
+        console.error('This is your book!');
       }
       //pollFactory.deletePoll(poll._id).then(function (res) {
       //  $location.path('/my');
