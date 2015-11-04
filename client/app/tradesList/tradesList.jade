@@ -9,9 +9,10 @@ div(ng-include='"components/navbar/navbar.html"')
       ul
         li(ng-repeat="tradeBook in incomingTrades") {{tradeBook.name}} {{tradeBook.bookId}} (requester: {{tradeBook.borrowerId}}) 
           a(ng-click="accept(tradeBook)") accept
-          | reject
+          | |
+          a(ng-click="reject(tradeBook)") reject
       hr
         
       h2 Outgoing Trade Requests
       ul
-        li(ng-repeat="tradeBook in outgoingTrades") {{tradeBook.name}} ({{tradeBook.status}})
+        li(ng-repeat="tradeBook in outgoingTrades | orderBy:'status'") {{tradeBook.name}} ({{tradeBook.status}})

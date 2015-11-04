@@ -21,4 +21,8 @@ angular.module('bookclubApp')
     $scope.accept = function(book) {
       book = booksFactory.acceptTrade(book, book.borrowerId);
     };
+
+    $scope.reject = function(book) {
+      book = booksFactory.rejectTrade(book, book.borrowerId);
+    };
   });
