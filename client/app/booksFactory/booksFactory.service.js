@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bookclubApp')
-  .factory('booksFactory', function($http, $q, Auth, Modal) {
+  .factory('booksFactory', function($http, $q, Auth) {
 
     var getBooksList = function(userId) {
       return $q(function(resolve, reject) {
@@ -22,12 +22,17 @@ angular.module('bookclubApp')
             booksList = response.data;
           }
 
-          // @TODO: add check that user hasn't already requested a trade on this book
           if (Auth.isLoggedIn()) {
             booksList.forEach(function(book) {
               if (book.owner != Auth.getCurrentUser()._id) {
                 book.canTrade = true;
               }
+              if (book.tradeRequests && book.tradeRequests.some(function (tradeRequest) {
+                return tradeRequest.status !== 'rejected' && tradeRequest.borrowerId == Auth.getCurrentUser()._id;
+              })) {
+                book.canTrade = false;
+              }
+              //_.filter(summary.data, {category: [{parent: 'Food'}] });
             });
           }
 
@@ -80,14 +85,21 @@ angular.module('bookclubApp')
         //return Modal.confirm.trade(function(book) {
 
         // @TODO: + if the user hasn't already proposed a trade for the book
-          if (window.confirm('Propose trade?')) {
-            console.log('trade proposed');
-            // POST /api/books/trade/:bookId (option 'propose')
-            // later, POST /api/books/trade/:bookId (option 'accept')
-            // ,,,,,, POST /api/books/trade/:bookId (option 'reject')
-          }
-      }
-      else {
+        if (window.confirm('Propose trade?')) {
+          console.log('trade proposed');
+          // POST /api/books/trade/:bookId (option 'propose')
+          // (or /api/books/trade/propose/:bookId)
+          // later, POST /api/books/trade/:bookId (option 'accept')
+          // ,,,,,, POST /api/books/trade/:bookId (option 'reject')
+
+          $http.patch('/api/books/trade/'+book._id, {borrowerId: Auth.getCurrentUser()._id, status: 'proposed'}).then(function success(response) {
+            // @TODO: provide a way to update the trade icon
+            console.log(response);
+          }, function failure(response) {
+            console.error(response);
+          });
+        }
+      } else {
         console.error('This is your book!');
       }
       //pollFactory.deletePoll(poll._id).then(function (res) {
@@ -98,10 +110,78 @@ angular.module('bookclubApp')
       //});
     };
 
+    var acceptTrade = function(book, tradeRequester) {
+
+    };
+
+    var rejectTrade = function(book, tradeRequester) {
+
+    };
+
+    var getIncomingTradeRequests = function(userId) {
+      return $q(function(resolve, reject) {
+        getBooksList(userId).then(function success(response) {
+          var books = response;
+          var tradeRequests = [];
+          //console.log(books);
+          books.forEach(function(book) {
+            if (book.tradeRequests) {
+              book.tradeRequests.forEach(function(tradeRequest) {
+                if (tradeRequest.status === 'proposed') {
+                  tradeRequests.push({
+                    bookId: book._id,
+                    name: book.name,
+                    borrowerId: tradeRequest.borrowerId,
+                    status: tradeRequest.status
+                  });
+                }
+              });
+            }
+          });
+
+          resolve(tradeRequests);
+        }, function failure(response) {
+          reject(response);
+        });
+      });
+    };
+
+    var getOutgoingTradeRequests = function(user) {
+      return $q(function(resolve, reject) {
+        getBooksList().then(function success(response) {
+          var books = response;
+          var tradeRequests = [];
+          //console.log(books);
+          books.forEach(function(book) {
+            if (book.tradeRequests) {
+              book.tradeRequests.forEach(function(tradeRequest) {
+                if (tradeRequest.borrowerId === user) {
+                  tradeRequests.push({
+                    bookId: book._id,
+                    name: book.name,
+                    borrowerId: tradeRequest.borrowerId,
+                    status: tradeRequest.status
+                  });
+                }
+              });
+            }
+          });
+
+          resolve(tradeRequests);
+        }, function failure(response) {
+          reject(response);
+        });
+      });
+    };
+
     // Public API here
     return {
       getBooksList: getBooksList,
       addBook: addBook,
-      proposeTrade: proposeTrade
+      proposeTrade: proposeTrade,
+      acceptTrade: acceptTrade,
+      rejectTrade: rejectTrade,
+      getIncomingTradeRequests: getIncomingTradeRequests,
+      getOutgoingTradeRequests: getOutgoingTradeRequests
     };
   });

@@ -7,7 +7,7 @@ var BookSchema = new Schema({
   name: String,
   owner: String,
   image: String,
-  tradeRequests: [], // [{borrowerId: String, status: 'proposed', 'accepted', 'denied'}]
+  tradeRequests: [], // [{borrowerId: String, status: 'proposed', 'accepted', 'rejected'}]
   active: Boolean
 });
 

@@ -7,7 +7,9 @@ angular.module('bookclubApp')
       restrict: 'E',
       controller: function($scope) {
         $scope.trade = function(book) {
-          booksFactory.proposeTrade(book);
+          if (book.canTrade) {
+            booksFactory.proposeTrade(book);
+          }
         };
       },
       link: function(scope, element, attrs) {}

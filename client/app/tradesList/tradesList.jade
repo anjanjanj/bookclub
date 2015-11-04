@@ -1,0 +1,15 @@
+div(ng-include='"components/navbar/navbar.html"')
+
+.container
+  .row
+    .col-lg-12
+      p
+        i (Make trade requests from the "All Books" page)
+      h2 Incoming Trade Requests
+      ul
+        li(ng-repeat="tradeBook in incomingTrades") {{tradeBook.name}} {{tradeBook.bookId}} (requester: {{tradeBook.borrowerId}}) (accept/reject)
+      hr
+        
+      h2 Outgoing Trade Requests
+      ul
+        li(ng-repeat="tradeBook in outgoingTrades") {{tradeBook.name}} ({{tradeBook.status}})

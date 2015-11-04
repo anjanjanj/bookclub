@@ -10,7 +10,7 @@ angular.module('bookclubApp')
     // });
 
     booksFactory.getBooksList().then(function success(response) {
-      //console.log(response);
+      console.log(response);
       $scope.books = response;
     }, function failure(response) {
       console.error(response);

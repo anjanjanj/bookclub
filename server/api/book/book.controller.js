@@ -92,6 +92,48 @@ exports.update = function(req, res) {
   });
 };
 
+exports.updateTrade = function(req, res) {
+  Book.findById(req.params.id, function(err, book) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (!book) {
+      return res.status(404).send('Not Found');
+    }
+    if (req.body.status === 'proposed') {
+      // user wants to propose a trade
+      // user should not be the owner of this book AND should not have any existing unrejected trade requests for it
+      if (book.owner === req.user._id) {
+        return res.status(403).send('You own this book');
+      }
+      if (book.tradeRequests) {
+        //console.log(book.tradeRequests);
+        var invalid = false;
+        book.tradeRequests.forEach(function(tradeRequest) {
+          if ((String(tradeRequest.borrowerId) === String(req.user._id)) && (tradeRequest.status === 'accepted' || tradeRequest.status === 'proposed')) {
+            invalid = true;
+          }
+        });
+        if (invalid) {
+          return res.status(403).send('Trade request exists');
+        }
+      }
+
+      book.tradeRequests = book.tradeRequests || [];
+      book.tradeRequests.push({borrowerId: req.user._id, status: 'proposed'});
+
+      book.save(function(err) {
+        if (err) {
+          return handleError(res, err);
+        }
+        return res.status(200).json(book);
+      });
+
+      //console.log(req.params.id, req.body);
+    }
+  });
+};
+
 // Deletes a book from the DB.
 exports.destroy = function(req, res) {
   Book.findById(req.params.id, function(err, book) {
