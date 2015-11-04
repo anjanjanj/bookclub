@@ -1,2 +1,4 @@
 .book(ng-click="trade(book)")
   {{ book.name }}
+  span.trade-icon(ng-show="book.canTrade")
+    i.fa.fa-hand-paper-o

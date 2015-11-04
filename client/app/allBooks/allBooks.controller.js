@@ -5,6 +5,10 @@ angular.module('bookclubApp')
 
     $scope.books = [];
 
+    // booksFactory.getBookCovers(['Lolita']).then(function success(response) {
+    //   console.log(response);
+    // });
+
     booksFactory.getBooksList().then(function success(response) {
       //console.log(response);
       $scope.books = response;

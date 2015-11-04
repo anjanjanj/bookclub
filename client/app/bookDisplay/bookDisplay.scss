@@ -4,4 +4,11 @@
   border: 1px black solid;
   margin: 10px;
   float: left;
+  position: relative;
+}
+
+.trade-icon {
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }

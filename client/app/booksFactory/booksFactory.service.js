@@ -8,19 +8,30 @@ angular.module('bookclubApp')
         var endpoint = '/api/books';
 
         $http.get(endpoint).then(function success(response) {
+          var booksList;
+
           if (userId) {
-            var thisUsersBooks = _.filter(response.data, function(book) {
+            booksList = _.filter(response.data, function(book) {
               return book.owner === userId;
             });
             //getBookCovers(thisUsersBooks).then(function(results) {
             // something like _.combine getBookCovers(thisUsersBooks)
             //console.log(results);
-            resolve(thisUsersBooks);
             //});
           } else {
-            resolve(response.data);
+            booksList = response.data;
           }
-          // move the cover lookup to here
+
+          // @TODO: add check that user hasn't already requested a trade on this book
+          if (Auth.isLoggedIn()) {
+            booksList.forEach(function(book) {
+              if (book.owner != Auth.getCurrentUser()._id) {
+                book.canTrade = true;
+              }
+            });
+          }
+
+          resolve(booksList);
         }, function failure() {
           reject('Error collecting books');
         });
