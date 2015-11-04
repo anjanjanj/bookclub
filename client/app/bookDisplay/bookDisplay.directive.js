@@ -8,7 +8,9 @@ angular.module('bookclubApp')
       controller: function($scope) {
         $scope.trade = function(book) {
           if (book.canTrade) {
-            booksFactory.proposeTrade(book);
+            book = booksFactory.proposeTrade(book);
+            // book.canTrade = false;
+            // console.log(book);
           }
         };
       },

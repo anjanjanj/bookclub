@@ -84,7 +84,7 @@ angular.module('bookclubApp')
       if (book.owner !== Auth.getCurrentUser()._id) {
         //return Modal.confirm.trade(function(book) {
 
-        // @TODO: + if the user hasn't already proposed a trade for the book
+        // @TODO: + if the user hasn't already proposed a trade for the book... is this already fixed?
         if (window.confirm('Propose trade?')) {
           console.log('trade proposed');
           // POST /api/books/trade/:bookId (option 'propose')
@@ -94,7 +94,7 @@ angular.module('bookclubApp')
 
           $http.patch('/api/books/trade/'+book._id, {borrowerId: Auth.getCurrentUser()._id, status: 'proposed'}).then(function success(response) {
             // @TODO: provide a way to update the trade icon
-            console.log(response);
+            console.log(response.data);
           }, function failure(response) {
             console.error(response);
           });
@@ -111,11 +111,21 @@ angular.module('bookclubApp')
     };
 
     var acceptTrade = function(book, tradeRequester) {
-
+      $http.patch('/api/books/trade/'+book.bookId, {borrowerId: tradeRequester, status: 'accepted'}).then(function success(response) {
+        book = response.data;
+        console.log(response.data);
+      }, function failure(response) {
+        console.error(response);
+      });
     };
 
     var rejectTrade = function(book, tradeRequester) {
-
+      $http.patch('/api/books/trade/'+book.bookId, {borrowerId: tradeRequester, status: 'rejected'}).then(function success(response) {
+        book = response.data;
+        console.log(response.data);
+      }, function failure(response) {
+        console.error(response);
+      });
     };
 
     var getIncomingTradeRequests = function(userId) {

@@ -17,4 +17,8 @@ angular.module('bookclubApp')
         console.error(response);
       });
     }
+
+    $scope.accept = function(book) {
+      book = booksFactory.acceptTrade(book, book.borrowerId);
+    };
   });

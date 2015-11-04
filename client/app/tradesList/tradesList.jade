@@ -7,7 +7,9 @@ div(ng-include='"components/navbar/navbar.html"')
         i (Make trade requests from the "All Books" page)
       h2 Incoming Trade Requests
       ul
-        li(ng-repeat="tradeBook in incomingTrades") {{tradeBook.name}} {{tradeBook.bookId}} (requester: {{tradeBook.borrowerId}}) (accept/reject)
+        li(ng-repeat="tradeBook in incomingTrades") {{tradeBook.name}} {{tradeBook.bookId}} (requester: {{tradeBook.borrowerId}}) 
+          a(ng-click="accept(tradeBook)") accept
+          | reject
       hr
         
       h2 Outgoing Trade Requests

@@ -98,12 +98,13 @@ exports.updateTrade = function(req, res) {
       return handleError(res, err);
     }
     if (!book) {
-      return res.status(404).send('Not Found');
+      return res.status(404).send('Book not found');
     }
     if (req.body.status === 'proposed') {
       // user wants to propose a trade
-      // user should not be the owner of this book AND should not have any existing unrejected trade requests for it
-      if (book.owner === req.user._id) {
+      // + user should NOT be the owner of this book
+      // + also the user not have any existing unrejected trade requests for this book
+      if (book.owner == req.user._id) {
         return res.status(403).send('You own this book');
       }
       if (book.tradeRequests) {
@@ -130,6 +131,50 @@ exports.updateTrade = function(req, res) {
       });
 
       //console.log(req.params.id, req.body);
+    }
+    else if (req.body.status === 'accepted' || req.body.status === 'rejected') {
+      // user wants to accept or reject a trade
+      // + user should own the book in question
+      // + also the trade in question should
+      //    a) exist
+      //    b) have a 'proposed' status
+      if (book.owner != req.user._id) {
+        return res.status(403).send('You do not own this book');
+      }
+      if (book.tradeRequests) {
+        //console.log(book.tradeRequests);
+        var trade = book.tradeRequests.filter(function (tradeRequest) {
+          return (String(tradeRequest.borrowerId) === String(req.body.borrowerId)) && (tradeRequest.status === 'proposed');
+        });
+
+        if (trade.length === 0) {
+          return res.status(404).send('Trade request not found!');
+        }
+
+        console.log('valid trade found', trade[0]);
+
+        // update/replace the trade request inside the book.tradeRequests array
+        var index = _.indexOf(book.tradeRequests, _.find(book.tradeRequests, {
+          borrowerId: req.body.borrowerId,
+          status: 'proposed'
+        }));
+
+        book.tradeRequests.splice(index, 1, {
+          borrowerId: req.body.borrowerId,
+          status: req.body.status
+        });
+
+        console.log(book);
+
+        // save the updated book
+        book.save(function(err) {
+          if (err) {
+            return handleError(res, err);
+          }
+          return res.status(200).json(book);
+        });
+      }
+
     }
   });
 };
