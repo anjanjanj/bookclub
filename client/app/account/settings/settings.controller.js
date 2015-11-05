@@ -16,6 +16,7 @@ angular.module('bookclubApp')
           // success
           console.log(response);
           $scope.message2 = 'Information updated!';
+          window.location.reload(); 
         }, function(response) {
           // failure
           console.log(response);
