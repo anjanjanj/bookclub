@@ -1,4 +1,4 @@
-.book(ng-click="trade(book)")
+.book(ng-click="trade(book)", ng-style="{'background-image': 'url(' + book.thumbnail + ')'}")
   {{ book.name }}
   span.trade-icon(ng-show="book.canTrade")
     i.fa.fa-hand-paper-o

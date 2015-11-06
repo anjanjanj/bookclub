@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 var BookSchema = new Schema({
   name: String,
   owner: String,
-  image: String,
+  thumbnail: String,
   tradeRequests: [], // [{borrowerId: String, status: 'proposed', 'accepted', 'rejected'}]
   active: Boolean
 });

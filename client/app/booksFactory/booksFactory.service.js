@@ -58,6 +58,7 @@ angular.module('bookclubApp')
       });
     };
 
+    /*
     var getBookCovers = function(bookNamesArray) {
       return $q(function(resolve, reject) {
         var results = [];
@@ -79,6 +80,7 @@ angular.module('bookclubApp')
         });
       });
     };
+    */
 
     var proposeTrade = function(book) {
       if (book.owner !== Auth.getCurrentUser()._id) {
@@ -101,12 +103,6 @@ angular.module('bookclubApp')
       } else {
         console.error('This is your book!');
       }
-      //pollFactory.deletePoll(poll._id).then(function (res) {
-      //  $location.path('/my');
-      //}, function(res) {
-      //  console.log(JSON.stringify(res));
-      //});
-      //});
     };
 
     var acceptTrade = function(book, tradeRequester) {

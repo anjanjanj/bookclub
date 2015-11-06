@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var Book = require('./book.model');
-//var request = require('request');
+var request = require('request');
 //var fs = require('fs');
 
 // Get list of books
@@ -32,41 +32,36 @@ exports.show = function(req, res) {
 
 exports.create = function(req, res) {
   var userId = req.user._id;
-  Book.create({
-    name: req.body.name,
-    owner: userId
-  }, function(err, book) {
-    if (err) {
-      return handleError(res, err);
-    }
-    /*
-    var encodedBookName = encodeURIComponent(req.body.name);
-    var options = {
-      url: 'https://www.googleapis.com/books/v1/volumes?q='+encodedBookName+'&maxResults=1&orderBy=relevance&key=AIzaSyCmFa9yTif-u0rBC2v52-U7LXPV1izGPuk',
-      headers: {
-        'User-Agent': 'request'
-      }
-    };
 
-    function callback(error, response, body) {
-      if (!error && response.statusCode == 200) {
-        var info = JSON.parse(body);
-        if (info.items[0].volumeInfo.imageLinks.thumbnail) {
-          thumbnail = info.items[0].volumeInfo.imageLinks.thumbnail;
-        }
-        else {
-          thumbnail = '';
-        }
-      }
-      else {
-        console.log(error);
+  var encodedBookName = encodeURIComponent(req.body.name);
+  var options = {
+    url: 'https://www.googleapis.com/books/v1/volumes?q='+encodedBookName+'&maxResults=1&orderBy=relevance&key=AIzaSyCmFa9yTif-u0rBC2v52-U7LXPV1izGPuk',
+    headers: {
+      'User-Agent': 'request'
+    }
+  };
+
+  request(options, function(error, response, body) {
+    var thumbnail = '';
+    if (!error && response.statusCode == 200) {
+      var info = JSON.parse(body);
+      if (info.items[0].volumeInfo.imageLinks.thumbnail) {
+        thumbnail = info.items[0].volumeInfo.imageLinks.thumbnail;
       }
     }
-    // GET 'https://www.googleapis.com/books/v1/volumes?q='+encodedBookName+'&maxResults=1&orderBy=relevance&key=AIzaSyCmFa9yTif-u0rBC2v52-U7LXPV1izGPuk'
-    request(options, callback);
-    */
-
-    return res.status(201).json(book);
+    else {
+      console.log(error);
+    }
+    Book.create({
+      name: req.body.name,
+      owner: userId,
+      thumbnail: thumbnail
+    }, function(err, book) {
+      if (err) {
+        return handleError(res, err);
+      }
+      return res.status(201).json(book);
+    });
   });
 };
 
