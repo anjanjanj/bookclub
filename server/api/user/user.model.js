@@ -42,7 +42,9 @@ UserSchema
   .get(function() {
     return {
       'name': this.name,
-      'role': this.role
+      'role': this.role,
+      'city': this.city,
+      'state': this.state
     };
   });
 

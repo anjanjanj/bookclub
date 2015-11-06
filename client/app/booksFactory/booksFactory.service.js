@@ -171,7 +171,8 @@ angular.module('bookclubApp')
                     bookId: book._id,
                     name: book.name,
                     borrowerId: tradeRequest.borrowerId,
-                    status: tradeRequest.status
+                    status: tradeRequest.status,
+                    owner: book.owner
                   });
                 }
               });

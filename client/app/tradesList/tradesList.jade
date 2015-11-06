@@ -6,13 +6,16 @@ div(ng-include='"components/navbar/navbar.html"')
       p
         i (Make trade requests from the "All Books" page)
       h2 Incoming Trade Requests
-      ul
-        li(ng-repeat="tradeBook in incomingTrades") {{tradeBook.name}} {{tradeBook.bookId}} (requester: {{tradeBook.borrowerId}}) 
-          a(ng-click="accept(tradeBook)") accept
-          | |
-          a(ng-click="reject(tradeBook)") reject
+      p(ng-hide="incomingTrades.length") No incoming trade requests received.
+      ul.list-unstyled
+        li(style="padding-bottom: 10px", ng-repeat="tradeBook in incomingTrades")
+          button.btn.btn-success(style="width: 35px", ng-click="accept(tradeBook)", title="Accept Trade") &#10004;
+          button.btn.btn-danger(style="width: 35px", ng-click="reject(tradeBook)", title="Reject Trade") &#10008;
+          | &nbsp; <b>{{tradeBook.userName}}</b> (from <b>{{tradeBook.userCity}}, {{tradeBook.userState}}</b>) wants to borrow <b>{{tradeBook.name}}</b>
       hr
         
       h2 Outgoing Trade Requests
+      p(ng-hide="outgoingTrades.length") No outgoing trade requests sent.
       ul
-        li(ng-repeat="tradeBook in outgoingTrades | orderBy:'status'") {{tradeBook.name}} ({{tradeBook.status}})
+        li(ng-repeat="tradeBook in outgoingTrades | orderBy:'status'")
+          | <i>[trade {{tradeBook.status}}]</i> <b>{{tradeBook.name}}</b> to <b>{{tradeBook.userName}}</b> (<b>{{tradeBook.userCity}}, {{tradeBook.userState}}</b>)
